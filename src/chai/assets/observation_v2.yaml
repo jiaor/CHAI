@@ -1,0 +1,37 @@
+# Observation model v2: the laboratory values the shipped family was trained under (RJ, 2026-09-26).
+#
+# One confined length repeats to 0.20 um, single Dpar etch pits scatter by 0.5 um, and grain-to-grain He
+# dispersion beyond analytical error is 12%.  The "v2" is this file's own version, not the prior's.  The
+# effort ranges that go with it are in the training configs (EffortPrior), not here.
+#
+#     cfg = yaml.safe_load(open("configs/observation_v2.yaml"))
+#     model = ObservationModel.from_config(cfg)
+#
+aft:
+  # Lab effort.  These three set the track count, and the count sets the
+  # precision: Ns ~ Poisson(506 * age[Ma] * U[ppm] * area[cm2]).
+  n_grains_counted: 20
+  area_per_grain_um2: 2000.0
+  n_lengths: 100
+  # Systematic, shared by the whole sample.
+  zeta_rel_sd: 0.02
+  u_rel_sd: 0.03
+  # Per-measurement.
+  length_meas_sd_um: 0.20
+  dpar_pit_sd_um: 0.50
+  n_dpar: 20
+  # Confined-length yield falls off as rho^2 in sparse samples.  Off by
+  # default: the mechanism is textbook, the constant is not calibrated.
+  length_yield_ref: null
+he:
+  analytical_rel_sd: 0.025
+  dispersion_rel_sd: 0.12
+  # Off by default.  A non-zero rate is a claim about a laboratory that
+  # nothing here measures; set it with a dataset behind it.
+  outlier_fraction: 0.0
+  outlier_rel_sd: 0.7
+  radius_rel_sd: 0.05
+  eU_rel_sd: 0.03
+  # null dates every grain the corpus carries (4).  A range makes the aliquot
+  # size vary, which is what real datasets and Deep Sets consumers do.
+  n_grains_range: null

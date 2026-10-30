@@ -1,0 +1,13 @@
+# The sdist carries what the wheel cannot: the configs the shipped family was made from.  The
+# reference implementations' sources (native/: KETCH.c, RDAAM.cpp, Mad_He.f90) are third-party code
+# under their authors' terms and are not redistributed (docs/release.md §12); chai.forward.native
+# loads them from CHAI_NATIVE_DIR where a user has built them.
+# The exclude line first: setuptools seeds the manifest from a stale egg-info/SOURCES.txt when one
+# is lying around, and that would bring every config back.
+prune native
+recursive-exclude configs *
+include configs/prior_v22.yaml configs/prior_v22_250.yaml configs/observation_v2.yaml
+include configs/train_flow_v22_100.yaml configs/train_flow_v22_250.yaml configs/chooser_v22.yaml
+include Makefile
+# setuptools ships tests/test_*.py by default; the fixtures and the Mad_He skip hook live here.
+include tests/conftest.py

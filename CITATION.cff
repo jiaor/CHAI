@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+message: "If you use CHAI, please cite it as below."
+title: "CHAI: Cooling Histories via Amortized Inference"
+type: software
+authors:
+  - family-names: Jiao
+    given-names: Ruohong
+    email: rjiao@uvic.ca
+    affiliation: University of Victoria
+    orcid: https://orcid.org/0000-0003-0303-3118
+abstract: >-
+  CHAI turns apatite fission-track and (U-Th)/He data into thermal histories under a second,
+  with calibrated uncertainty. A normalizing flow, trained on millions of synthetic samples,
+  draws the posterior of time-temperature paths directly from the measurements. No Monte Carlo
+  search runs on your machine. The package also includes exact, differentiable PyTorch ports of
+  the fission-track annealing model of Ketcham et al. (2007) and RDAAM of Flowers et al. (2009),
+  for posterior-predictive checks against your data.
+keywords:
+  - thermochronology
+  - apatite fission track
+  - "(U-Th)/He"
+  - thermal history
+  - normalizing flow
+  - PyTorch
+version: 0.15.0
+date-released: 2026-10-30
+repository-code: https://github.com/jiaor/CHAI
+url: https://web.uvic.ca/~rjiao/chai/
+license: GPL-3.0-or-later

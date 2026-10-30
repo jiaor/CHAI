@@ -1,0 +1,56 @@
+# Prior v2.2, the 100 Ma member: the prior over thermal histories the shipped family was trained on.
+#
+# A PulsePrior: a slow background cooling (0.05-0.5 K/Ma) plus Poisson exhumation pulses and reheating
+# episodes with a mean count of one of each per time span (rates 1 / t_max), extra pulses at 0.10 / Ma
+# over the last 25 Ma (so that ~20% of 100 Ma draws have an AFT age under 25 Ma), pulse widths 2-50 Ma,
+# episode ramps 2-25 Ma, plateaus 0.5-40 Ma, amplitudes 5-150 K, and cooling and heating rates capped at
+# 100 K/Ma.  With the 2 Ma width and ramp floors a 2 Ma pulse reaches 100 K/Ma only above 127 K of drop,
+# and on the 96-node grid (1.053 Ma) the steepest segment of such a pulse reads 60-89 K/Ma, so as
+# resolved the prior reaches ~90 K/Ma, not 100 (grid max-rate p95 / p99 / max 48 / 67 / 90 K/Ma).
+# Cooling-only histories are the N = 0 draws of this prior: there is no separate cooling-only member.
+# The present-day temperature is drawn U(0, 25) °C and handed to the members as an input.
+kind: PulsePrior
+history:
+  t_max: 100.0
+  T_max: 200.0
+  T_present_range:
+  - 0.0
+  - 25.0
+  pulse_rate: 0.01                   # mean count 1 per horizon
+  background_range:
+  - 0.05
+  - 0.5
+  pulse_width_range:
+  - 2.0
+  - 50.0
+  pulse_concentration: 0.5
+  recent_rate: 0.1                    # extra pulses per Ma of the recent window
+  recent_window: 25.0
+  episode_rate: 0.01                 # mean count 1 per horizon
+  amplitude_range:
+  - 5.0
+  - 150.0
+  ramp_range:
+  - 2.0
+  - 25.0
+  plateau_range:
+  - 0.5
+  - 40.0
+  rate_max: 100.0
+  n_steps: 2048
+grain:
+  radius_range:
+  - 30.0
+  - 110.0
+  U_range:
+  - 1.0
+  - 150.0
+  th_u_ratio_range:
+  - 0.2
+  - 10.0
+  dpar_range:
+  - 1.2
+  - 3.5
+grid:                 # 96 uniform: the first 96 nodes of the 250 Ma member's 96 + 64, as Family requires
+  n_grid: 96
+  spacing: uniform

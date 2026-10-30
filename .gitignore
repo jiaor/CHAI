@@ -1,0 +1,31 @@
+__pycache__/
+*.py[co]
+.ipynb_checkpoints/
+native/build/
+/data/
+/runs/
+*.h5
+*.hdf5
+*.npz
+.venv/
+*.ckpt
+*.pt
+!src/chai/assets/*.pt
+.pytest_cache/
+.ruff_cache/
+results/*.npy
+results/**/*.npy
+results/**/*.log
+dist/
+*.egg-info/
+# the browser app (PLAN.md Stage 17): exported models, fixtures and vendored runtime are built
+web/node_modules/
+web/models/
+web/vendor/
+web/test/fixtures.json
+web/test/out/
+# the paper: QTQt's own outputs (large; rerun from the .run files) and Ketcham et al. (2018)'s
+# supporting information (theirs; download from doi:10.1029/2018GC007555)
+paper/natural/qtqt/*lab9*.txt
+paper/natural/qtqt/*_QTQt*.txt
+paper/ggge21634-sup/

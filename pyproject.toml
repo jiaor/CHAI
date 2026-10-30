@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "chai-thermo"
+version = "0.15.0"
+description = "CHAI: Cooling Histories via Amortized Inference."
+readme = "README-pypi.md"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+authors = [{ name = "Ruohong Jiao", email = "rjiao@uvic.ca" }]
+keywords = ["thermochronology", "fission track", "(U-Th)/He", "thermal history", "amortized inference", "normalizing flow"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    # core numerics / io
+    "numpy",
+    "scipy",
+    "h5py",
+    "pyyaml",
+    "matplotlib",
+    # torch (PyPI linux wheels bundle CUDA; driver 580 here supports up to CUDA 13.0)
+    "torch>=2.4",
+    "threadpoolctl>=3.7.0",
+]
+
+[project.urls]
+Homepage = "https://web.uvic.ca/~rjiao/chai/"
+"Run in the browser" = "https://web.uvic.ca/~rjiao/chai/"
+Repository = "https://github.com/jiaor/CHAI"
+
+[project.optional-dependencies]
+notebook = ["jupyterlab", "ipywidgets", "ipykernel", "pandas"]
+
+[dependency-groups]
+dev = ["pytest", "pytest-xdist", "ruff"]
+# the browser app's export (scripts/export_onnx.py, `make web-models`)
+web = ["onnx", "onnxscript", "onnxruntime"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["chai*"]
+
+[tool.setuptools.package-data]
+# the shipped family (two members and the chooser) and the three configs it was trained under: `api.load()`
+# needs no checkout.  PyPI's file limit is 100 MB.
+chai = ["assets/flow_v22_*.pt", "assets/chooser_v22.pt", "assets/*.yaml"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
