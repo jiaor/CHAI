@@ -167,13 +167,4 @@ reference in a form GitHub and Zenodo read.
 
 ## Licence
 
-Copyright (C) 2026 Ruohong Jiao. CHAI is free software: you can redistribute it and/or modify it
-under the terms of the GNU General Public License as published by the Free Software Foundation,
-either version 3 of the License, or (at your option) any later version. It is distributed in the
-hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See [LICENSE](LICENSE).
-
-The licence covers CHAI's own code and its trained models. The third-party reference
-implementations CHAI was validated against (`KETCH.c`, `RDAAM.cpp`, `Mad_He.f90`) are not
-distributed. The web app bundles ONNX Runtime Web (MIT) and the Archivo and Courier Prime fonts (SIL
-Open Font License), each with its licence beside it.
+Copyright (C) 2026 Ruohong Jiao. GPL-3.0-or-later; see [LICENSE](LICENSE).

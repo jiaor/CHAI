@@ -33,8 +33,13 @@ FILES=(
   docs/api.md docs/architecture.md docs/family.md
 )
 
+# Once the tree has been pushed its history is public: keep .git and add a commit on top, rather than
+# a fresh root that would need a force-push of master.
+KEEP=""
+if [ -d "$OUT/.git" ]; then KEEP=$(mktemp -d); mv "$OUT/.git" "$KEEP/"; fi
 rm -rf "$OUT"
 mkdir -p "$OUT"
+if [ -n "$KEEP" ]; then mv "$KEEP/.git" "$OUT/"; rmdir "$KEEP"; fi
 git ls-files -z -- "${DIRS[@]}" "${FILES[@]}" \
   | grep -zv '^src/chai_thermo.egg-info/' \
   | tar --null -T - -cf - | tar -C "$OUT" -xf -
@@ -61,18 +66,36 @@ if [ -n "$stale" ]; then
 fi
 
 cd "$OUT"
-git init -q -b master
+[ -d .git ] || git init -q -b master
 git add -A
 # The public identity (the private repository's commits carry the machine's hostname).
 git config user.name "Ruohong Jiao"
 git config user.email "rjiao@uvic.ca"
-git commit -q -m "chai-thermo $VERSION: the package with its trained family, the reference sources, configs, tests, scripts and docs
-
-Assembled by scripts/public_tree.sh from the private repository at $(cd "$ROOT" && git rev-parse --short HEAD).
-
-Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>
+FROM=$(cd "$ROOT" && git rev-parse --short HEAD)
+TRAILER="Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 Claude-Session: https://claude.ai/code/session_01Uih9hJPnNZ791SBphZqxPM"
-git tag -a "v$VERSION" -m "chai-thermo $VERSION"
+if ! git rev-parse -q --verify HEAD >/dev/null; then
+  git commit -q -m "chai-thermo $VERSION: the package with its trained family, configs, tests, scripts and docs
+
+Assembled by scripts/public_tree.sh from the private repository at $FROM.
+
+$TRAILER"
+elif ! git diff --cached --quiet; then
+  git commit -q -m "chai-thermo $VERSION: update from the private repository at $FROM
+
+$(git diff --cached --stat | tail -1 | sed 's/^ *//')
+
+$TRAILER"
+else
+  echo "no change since the last commit"
+fi
+MOVED=""
+if git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null; then
+  if [ "$(git rev-parse "v$VERSION^{commit}")" != "$(git rev-parse HEAD)" ]; then MOVED=1; fi
+  git tag -f -a "v$VERSION" -m "chai-thermo $VERSION" >/dev/null
+else
+  git tag -a "v$VERSION" -m "chai-thermo $VERSION"
+fi
 
 echo "---"
 echo "tree: $OUT  ($(git ls-files | wc -l) files, $(du -sh --exclude=.git . | cut -f1), .git $(du -sh .git | cut -f1))"
@@ -81,5 +104,13 @@ find . -path ./.git -prune -o -type f -size +50M -print | sed 's|^\./|  |'
 [ "$missing" -eq 0 ] && echo "every Markdown link resolves" || echo "$missing broken Markdown link(s)"
 [ -z "$stale" ] && echo "no earlier-version mentions" || echo "earlier-version mentions found (listed above)"
 echo "commit $(git rev-parse --short HEAD), tag v$VERSION; push with:"
-echo "  cd $OUT && git remote add origin git@github.com:jiaor/CHAI.git && git push -u origin master --tags"
+if git remote | grep -q origin; then
+  echo "  cd $OUT && git push origin master"
+  # moving a pushed tag rewrites what the tag names: only before a GitHub release (Zenodo archives the tag)
+  if [ -n "$MOVED" ]; then
+    echo "  cd $OUT && git push --force origin v$VERSION     # the tag moved; only if no GitHub release uses it yet"
+  fi
+else
+  echo "  cd $OUT && git remote add origin git@github.com:jiaor/CHAI.git && git push -u origin master --tags"
+fi
 [ "$missing" -eq 0 ] && [ -z "$stale" ]
