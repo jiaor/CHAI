@@ -29,19 +29,6 @@ pip install torch --index-url https://download.pytorch.org/whl/cpu
 pip install chai-thermo
 ```
 
-From this repository, with [uv](https://docs.astral.sh/uv/):
-
-```bash
-uv sync                      # .venv with everything, torch included
-make test                    # the test suite (uv run pytest)
-make wheel                   # dist/chai_thermo-<version>-py3-none-any.whl and the sdist
-```
-
-The reference implementations (`KETCH.c`, `RDAAM.cpp`, `Mad_He.f90`) are third-party code and are
-not distributed with CHAI; the PyTorch ports were validated against them and inference needs
-neither them nor a compiler. Anyone holding the sources can build them and point `CHAI_NATIVE_DIR`
-at the build directory to call them through `chai.forward.native`.
-
 ## Use
 
 Try it on a synthetic sample whose true history is known:
@@ -132,28 +119,6 @@ paths, the AFT port runs 90 000 paths/s with lengths on one GPU (1.1 million for
 at a median age error of 4e-5. **[docs/api.md](docs/api.md)** is the full reference; its examples
 are executed by the test suite. The native references are not thread-safe: parallelise with
 processes.
-
-## Reproducing the family
-
-Everything the shipped weights were made from is in `configs/`:
-
-```bash
-uv run python scripts/simulate.py --out data/corpus_v22_100.h5 --n 3000000 --grains 12 \
-    --prior-config configs/prior_v22.yaml --seed 2120           # 2.5 h on ~100 CPU cores; 250 Ma: prior_v22_250.yaml, seed 2270
-uv run python -c "from chai.models.latent import Latent, LatentConfig; \
-    Latent.fit('data/corpus_v22_100.h5', config=LatentConfig(present_input=True)).save('data/latent_v22_100.pt')"
-uv run python scripts/train_gaussian.py --config configs/train_flow_v22_100.yaml --out results/flow_v22_100 --device cuda:0   # 4.7 h
-uv run python scripts/train_chooser.py --config configs/chooser_v22.yaml --out results/chooser_v22 --device cuda:0           # 5 min
-uv run python scripts/calibration_study.py --run results/flow_v22_100 --out results/flow_v22_100/rf --remove-floor \
-    --draws 1000 --deep-draws 400 --device cuda:0              # the calibration tables of docs/family.md
-make web-models && make web                                    # the browser app, from the shipped family
-```
-
-## Layout
-
-`src/chai/` the package, with the shipped weights in `src/chai/assets/` · `native/` the C and
-C++ reference implementations · `configs/` what the family was trained under · `scripts/`
-simulation, training, calibration, export · `tests/` · `docs/`
 
 ## Citing
 
