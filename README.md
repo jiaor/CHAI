@@ -111,15 +111,6 @@ out["age"].sum().backward()                                          # exact d(a
 he = rdaam_age(t, T, radius=torch.tensor([60.0]), U=torch.tensor([40.0]), Th=torch.tensor([80.0]))
 ```
 
-`KETCHAM_2007`, Ketcham et al. (2007) as published, is the default calibration for the port and
-the C reference alike; `KETCHAM_1999` is available by name. For RDAAM the radial grid `rdim`
-sets both cost and error: 512 matches the reference's best setting to a median 2e-4 in age, 128
-runs 3× faster and reads every age 0.3–1.0% low. Against the C and C++ references on 1 000 prior
-paths, the AFT port runs 90 000 paths/s with lengths on one GPU (1.1 million for the age alone)
-at a median age error of 4e-5. **[docs/api.md](docs/api.md)** is the full reference; its examples
-are executed by the test suite. The native references are not thread-safe: parallelise with
-processes.
-
 ## Citing
 
 Until the paper describing the method appears, cite the software:
