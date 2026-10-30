@@ -126,10 +126,6 @@ Until the paper describing the method appears, cite the software:
 
 > Jiao, R. (2026). CHAI: Cooling Histories via Amortized Inference (version 0.15.0) [Computer software]. https://github.com/jiaor/CHAI
 
-`chai.__version__` gives the version a result used; a posterior is conditional on the prior its
-family was trained on, so the version matters. `CITATION.cff` in this repository carries the same
-reference in a form GitHub and Zenodo read.
-
 ## Licence
 
 Copyright (C) 2026 Ruohong Jiao. GPL-3.0-or-later; see [LICENSE](LICENSE).
