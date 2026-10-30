@@ -65,8 +65,8 @@ fit = api.check_fit(post, sample, family)     # which data the paths do not pred
 ```
 
 Optional arguments of `infer`: `boxes=[api.Box(t=(55, 65), T=(80, 110))]` for constraints the
-paths must pass through, `cooling_only=True` for paths that never reheat (QTQt's monotonic
-option), and `member=100` or `250` to pick the member yourself. Boxes and `cooling_only` are exact
+paths must pass through, `cooling_only=True` for paths that never reheat (by >5 degree),
+and `member=100` or `250` to pick the member yourself. Boxes and `cooling_only` are exact
 rejection of the member's draws, and the result reports the acceptance rate. `chai.inputs` saves
 a sample, its constraints and the settings as one JSON file, the same file the browser page reads
 and writes. `help(api)` is the reference: what the members read, what they assume, and every
@@ -74,8 +74,7 @@ warning. Lengths given with `angles=` are projected by Ketcham et al. (2007a); `
 has the parameter sets.
 
 Every answer comes from one member on its own grid, never a mixture of the two. A posterior is
-conditional on the prior the family was trained on, which `family[100].prior` prints and
-[docs/family.md](docs/family.md) describes; say which `chai-thermo` version a published result used.
+conditional on the prior the family was trained on.
 
 ## The shipped family
 
