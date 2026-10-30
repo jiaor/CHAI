@@ -114,7 +114,7 @@ he = rdaam_age(t, T, radius=torch.tensor([60.0]), U=torch.tensor([40.0]), Th=tor
 
 Until the paper describing the method appears, cite the software:
 
-> Jiao, R. (2026). CHAI: Cooling Histories via Amortized Inference (version 0.15.0) [Computer software]. https://github.com/jiaor/CHAI
+> Jiao, R. (2026). CHAI: Cooling Histories via Amortized Inference (version 0.15.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23823454
 
 ## Licence
 

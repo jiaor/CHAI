@@ -89,10 +89,17 @@ $TRAILER"
 else
   echo "no change since the last commit"
 fi
+# A tag that exists is left alone: once a GitHub release uses it, Zenodo has archived what it names.
+# MOVE_TAG=1 moves it, for a tag no release uses yet.
 MOVED=""
 if git rev-parse -q --verify "refs/tags/v$VERSION" >/dev/null; then
-  if [ "$(git rev-parse "v$VERSION^{commit}")" != "$(git rev-parse HEAD)" ]; then MOVED=1; fi
-  git tag -f -a "v$VERSION" -m "chai-thermo $VERSION" >/dev/null
+  if [ "$(git rev-parse "v$VERSION^{commit}")" != "$(git rev-parse HEAD)" ]; then
+    if [ "${MOVE_TAG:-}" = 1 ]; then
+      git tag -f -a "v$VERSION" -m "chai-thermo $VERSION" >/dev/null; MOVED=1
+    else
+      echo "tag v$VERSION stays at $(git rev-parse --short "v$VERSION^{commit}") (released; MOVE_TAG=1 to move an unreleased tag)"
+    fi
+  fi
 else
   git tag -a "v$VERSION" -m "chai-thermo $VERSION"
 fi
